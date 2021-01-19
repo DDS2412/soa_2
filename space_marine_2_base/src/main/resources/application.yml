@@ -16,8 +16,8 @@ postgresql:
   host: 127.0.0.1
   port: 5432
   database: postgres
-  username: postgres
-  password: postgres
+  username: s242193
+  password: RVDgeS3WfRLNdY20
 
 spring:
   application:
@@ -25,8 +25,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop
-      use-new-id-generator-mappings: true
+      ddl-auto: validate
     properties:
       hibernate:
         show_sql: false
@@ -35,7 +34,7 @@ spring:
         temp:
           use_jdbc_metadata_defaults: false
   datasource:
-    url: jdbc:postgresql://${postgresql.host}:${postgresql.port}/${postgresql.database}
+    url: jdbc:postgresql://pg:5432/studs
     username: ${postgresql.username}
     password: ${postgresql.password}
     driver-class-name: org.postgresql.Driver

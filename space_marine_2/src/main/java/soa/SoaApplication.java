@@ -65,6 +65,7 @@ public class SoaApplication {
 
     @Bean
     public String getEndpoint(){
-        return "https://localhost:8444/space_marine_base/";
+        return Optional.of(System.getenv("BASE_SPACE_MARINE_URL"))
+                .orElse("https://localhost:8444/space_marine_base/");
     }
 }
