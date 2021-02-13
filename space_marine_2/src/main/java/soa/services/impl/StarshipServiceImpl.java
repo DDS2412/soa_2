@@ -9,6 +9,7 @@ import soa.model.SpaceMarine;
 import soa.model.Starship;
 import soa.repositories.SpaceMarineRepository;
 import soa.repositories.StarshipRepository;
+import soa.services.SpaceMarineService;
 import soa.services.StarshipService;
 
 import java.util.ArrayList;
@@ -22,17 +23,21 @@ public class StarshipServiceImpl implements StarshipService {
 
     private final StarshipRepository starshipRepository;
 
+    private final SpaceMarineService spaceMarineService;
+
     public StarshipServiceImpl(SpaceMarineRepository spaceMarineRepository,
-                               StarshipRepository starshipRepository) {
+                               StarshipRepository starshipRepository,
+                               SpaceMarineService spaceMarineService) {
         this.spaceMarineRepository = spaceMarineRepository;
         this.starshipRepository = starshipRepository;
+        this.spaceMarineService = spaceMarineService;
 
         createNewStarship();
     }
 
     @Override
     public void loadSpaceMarine(Integer spaceMarineId, Long starshipId) throws BadSpaceMarineIdException, BadStarshipIdException, SpaceMarineJustHasSpaceshipTicketException {
-        Optional<SpaceMarine> optionalSpaceMarine = spaceMarineRepository.findById(spaceMarineId);
+        Optional<SpaceMarine> optionalSpaceMarine = spaceMarineService.getSpaceMarine(spaceMarineId);
         SpaceMarine spaceMarine = optionalSpaceMarine.orElseThrow(BadSpaceMarineIdException::new);
 
         Optional<Starship> optionalStarship = starshipRepository.findById(starshipId);
@@ -49,7 +54,7 @@ public class StarshipServiceImpl implements StarshipService {
     @Override
     public void unloadSpaceMarine(Integer spaceMarineId, Long starshipId)
             throws BadSpaceMarineIdException, BadStarshipIdException, SpaceMarineDoesntExistInSpaceshipException {
-        Optional<SpaceMarine> optionalSpaceMarine = spaceMarineRepository.findById(spaceMarineId);
+        Optional<SpaceMarine> optionalSpaceMarine = spaceMarineService.getSpaceMarine(spaceMarineId);
         SpaceMarine spaceMarine = optionalSpaceMarine.orElseThrow(BadSpaceMarineIdException::new);
 
         Optional<Starship> optionalStarship = starshipRepository.findById(starshipId);
@@ -83,7 +88,7 @@ public class StarshipServiceImpl implements StarshipService {
 
     @Override
     public Boolean checkAtSpaceMarine(Integer spaceMarineId) throws BadSpaceMarineIdException {
-        Optional<SpaceMarine> optionalSpaceMarine = spaceMarineRepository.findById(spaceMarineId);
+        Optional<SpaceMarine> optionalSpaceMarine = spaceMarineService.getSpaceMarine(spaceMarineId);
         SpaceMarine spaceMarine = optionalSpaceMarine.orElseThrow(BadSpaceMarineIdException::new);
 
         if (spaceMarine.getStarship() == null){
