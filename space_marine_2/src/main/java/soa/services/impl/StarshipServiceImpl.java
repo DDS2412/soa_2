@@ -12,9 +12,8 @@ import soa.repositories.StarshipRepository;
 import soa.services.SpaceMarineService;
 import soa.services.StarshipService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -91,7 +90,16 @@ public class StarshipServiceImpl implements StarshipService {
         Optional<SpaceMarine> optionalSpaceMarine = spaceMarineService.getSpaceMarine(spaceMarineId);
         SpaceMarine spaceMarine = optionalSpaceMarine.orElseThrow(BadSpaceMarineIdException::new);
 
-        if (spaceMarine.getStarship() == null){
+        List<Starship> starships = starshipRepository
+                .findAll()
+                .stream()
+                .filter(starship -> starship
+                        .getSpaceMarines()
+                        .stream()
+                        .filter(spaceMarine1 -> spaceMarine1.getId().equals(spaceMarine.getId())).count() == 1)
+                .collect(Collectors.toList());
+
+        if (starships.size() == 0){
             return false;
         } else {
             return true;
